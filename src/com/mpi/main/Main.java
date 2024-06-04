@@ -1,12 +1,12 @@
-package com.raven.main;
+package com.mpi.main;
 
 import com.evolis.sdk.*;
 import com.evolis.sdk.examples.PrinterName;
-import com.raven.component.PanelCover;
-import com.raven.component.PanelCard;
-import com.raven.component.PanelLoading;
-import com.raven.component.PanelLogin;
-import com.raven.component.PanelSearch;
+import com.mpi.component.PanelCover;
+import com.mpi.component.PanelCard;
+import com.mpi.component.PanelLoading;
+import com.mpi.component.PanelLogin;
+import com.mpi.component.PanelSearch;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

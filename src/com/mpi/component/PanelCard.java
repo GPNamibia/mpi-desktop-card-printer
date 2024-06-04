@@ -1,15 +1,15 @@
-package com.raven.component;
+package com.mpi.component;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
-import static com.raven.component.PanelLogin.preference;
-import com.raven.main.Main;
-import com.raven.swing.Button;
-import com.raven.swing.MyPasswordField;
-import com.raven.swing.MyTextField;
+import static com.mpi.component.PanelLogin.preference;
+import com.mpi.main.Main;
+import com.mpi.swing.Button;
+import com.mpi.swing.MyPasswordField;
+import com.mpi.swing.MyTextField;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;

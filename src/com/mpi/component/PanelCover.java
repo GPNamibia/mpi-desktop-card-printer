@@ -1,7 +1,7 @@
-package com.raven.component;
+package com.mpi.component;
 
-import com.raven.main.Main;
-import com.raven.swing.ButtonOutLine;
+import com.mpi.main.Main;
+import com.mpi.swing.ButtonOutLine;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
@@ -58,6 +58,8 @@ public class PanelCover extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+
+        setBackground(new java.awt.Color(0, 102, 204));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

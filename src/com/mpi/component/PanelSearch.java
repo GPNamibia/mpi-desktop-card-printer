@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.raven.component;
+package com.mpi.component;
 
 import com.evolis.sdk.CardFace;
 import com.evolis.sdk.Connection;
@@ -13,12 +13,12 @@ import com.evolis.sdk.ReturnCode;
 import com.evolis.sdk.RwCardType;
 import com.evolis.sdk.examples.PrinterName;
 import com.google.zxing.WriterException;
-import static com.raven.component.PanelCard.getPatientData;
-import com.raven.main.Main;
-import static com.raven.main.Main.preferences;
-import com.raven.swing.Button;
-import com.raven.swing.ButtonOutLine;
-import com.raven.swing.MyTextField;
+import static com.mpi.component.PanelCard.getPatientData;
+import com.mpi.main.Main;
+import static com.mpi.main.Main.preferences;
+import com.mpi.swing.Button;
+import com.mpi.swing.ButtonOutLine;
+import com.mpi.swing.MyTextField;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;

@@ -1,12 +1,12 @@
-package com.raven.component;
+package com.mpi.component;
 
-import static com.raven.component.PanelCard.parseAndPopulateLabels;
-import com.raven.main.Main;
-import static com.raven.main.Main.panelLoading;
-import static com.raven.main.Main.preferences;
-import com.raven.swing.Button;
-import com.raven.swing.MyPasswordField;
-import com.raven.swing.MyTextField;
+import static com.mpi.component.PanelCard.parseAndPopulateLabels;
+import com.mpi.main.Main;
+import static com.mpi.main.Main.panelLoading;
+import static com.mpi.main.Main.preferences;
+import com.mpi.swing.Button;
+import com.mpi.swing.MyPasswordField;
+import com.mpi.swing.MyTextField;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;

@@ -86,7 +86,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
         cmd.setBackground(new Color(0,74,151,255));
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("Login");
-        JLabel versionLabel = new JLabel("version 1.0");
+        JLabel versionLabel = new JLabel("version 1.0-Prod");
         versionLabel.setFont(new Font("sansserif", 0, 13));
         versionLabel.setForeground(Color.decode("#7A8C8D"));
         loginButton.add(versionLabel, "gapleft 50");
@@ -117,7 +117,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
     private void login(String username, String password) {
         try {
 
-            String urlString = configReader.getUrl();
+            String urlString = configReader.getUrl()+"/auth";
             // Create a URL object
             URL url = new URL(urlString);
 

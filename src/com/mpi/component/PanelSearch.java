@@ -70,8 +70,8 @@ public class PanelSearch extends javax.swing.JPanel {
     
     private void init() {
         // Title
-        title = new JLabel("Retrieve & Print");
-        title.setFont(new Font("sansserif", Font.BOLD, 30));
+        title = new JLabel("Search & Print Health Card");
+        title.setFont(new Font("sansserif", Font.BOLD, 26));
         title.setForeground(new Color(0,74,151,255));
         add(title);
 
@@ -150,7 +150,7 @@ public class PanelSearch extends javax.swing.JPanel {
         buttonLogout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(mainFrame, "Successfully Logged out", "Success", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(mainFrame, "Successfully Logged out", "Success", JOptionPane.INFORMATION_MESSAGE);
                 mainFrame.showLoggedInPanels(false);
             }
         });
@@ -219,6 +219,8 @@ public class PanelSearch extends javax.swing.JPanel {
         
         String printerName = PrinterName.get(new String[]{});
         Connection connection = new Connection(printerName);
+        buttonPrint.setEnabled(false);
+        buttonPrint.setBackground(Color.GRAY);
 
         if (preferences == null) {
             JOptionPane.showMessageDialog(this, "Error: Image file path is null", "Error", JOptionPane.ERROR_MESSAGE);
@@ -237,16 +239,15 @@ public class PanelSearch extends javax.swing.JPanel {
             }
 
             if (printerName != null) {
-                JOptionPane.showMessageDialog(this, "Successfully connected to " + printerName,
-                        "Printer Info", JOptionPane.INFORMATION_MESSAGE);
-                // Display printer state to use if the printer is not ready
+                //JOptionPane.showMessageDialog(this, "Successfully connected to " + printerName,"Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                // Display printer state to user if the printer is not ready
                 if (state != null) {
                     if (state.getMajorState() == State.MajorState.READY) {
                         System.out.println("Printer is READY.");
                     } else {
                         System.out.println("Printer state is " + state.getMajorState() + ":" + state.getMinorState());
-                        JOptionPane.showMessageDialog(this, "Printer state is " + state.getMajorState() + ":" + state.getMinorState(),
-                                "Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this,  state.getMajorState() + ":" + state.getMinorState(),
+                                "Printer Status", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
 
@@ -275,8 +276,6 @@ public class PanelSearch extends javax.swing.JPanel {
                 }
 
                 System.out.println("> Start printing...");
-                //JOptionPane.showMessageDialog(null, "> Start printing...");
-
                 // print result output
                 ReturnCode r = ps.print();
                 System.out.println("> Print result: " + r);
@@ -287,6 +286,8 @@ public class PanelSearch extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(this, "Printer connection failed", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        buttonPrint.setEnabled(true);
+        buttonPrint.setBackground(new Color(0,74,151,255));
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

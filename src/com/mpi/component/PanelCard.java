@@ -7,6 +7,7 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
 import static com.mpi.component.PanelLogin.preference;
 import com.mpi.main.Main;
+import com.mpi.main.ConfigReader;
 import com.mpi.swing.Button;
 import com.mpi.swing.MyPasswordField;
 import com.mpi.swing.MyTextField;
@@ -51,6 +52,7 @@ public class PanelCard extends javax.swing.JLayeredPane {
     private static JLabel healthIDLabel;
     private static Main mainFrame;
     public static PanelLoading panelLoading;
+    private static ConfigReader configReader = new ConfigReader();
 
     public PanelCard(Main mainFrame) {
         this.mainFrame = mainFrame; 
@@ -188,8 +190,8 @@ public class PanelCard extends javax.swing.JLayeredPane {
                 // Set your authorization token
                 String auth =  "Bearer "+ access_token;
                 System.out.println("col " + auth);
-                // Construct the URL
-                String urlString = "https://namibia-mpi.globalhealthapp.net/patient/" + query;
+
+                String urlString = configReader.getUrl() +"/patient/"+ query;
 
                 // Create a URL object
                 URL url = new URL(urlString);

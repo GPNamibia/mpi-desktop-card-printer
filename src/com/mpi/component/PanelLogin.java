@@ -2,6 +2,7 @@ package com.mpi.component;
 
 import static com.mpi.component.PanelCard.parseAndPopulateLabels;
 import com.mpi.main.Main;
+import com.mpi.main.ConfigReader;
 import static com.mpi.main.Main.panelLoading;
 import static com.mpi.main.Main.preferences;
 import com.mpi.swing.Button;
@@ -34,6 +35,8 @@ public class PanelLogin extends javax.swing.JLayeredPane {
      private PanelCard panelCard;
      private PanelSearch panelSearch;
      private static Main mainFrame;
+    ConfigReader configReader = new ConfigReader();
+
 
     public PanelLogin(Main mainFrame) {
         this.mainFrame = mainFrame; 
@@ -46,7 +49,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
 
     private void initRegister() {
         register.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]push"));
-        JLabel label = new JLabel("MPI Login");
+        JLabel label = new JLabel("Namibia MPI");
         label.setFont(new Font("sansserif", 1, 30));
         label.setForeground(new Color(0,74,151,255));
         register.add(label);
@@ -83,6 +86,10 @@ public class PanelLogin extends javax.swing.JLayeredPane {
         cmd.setBackground(new Color(0,74,151,255));
         cmd.setForeground(new Color(250, 250, 250));
         cmd.setText("Login");
+        JLabel versionLabel = new JLabel("version 1.0");
+        versionLabel.setFont(new Font("sansserif", 0, 13));
+        versionLabel.setForeground(Color.decode("#7A8C8D"));
+        loginButton.add(versionLabel, "gapleft 50");
         
         cmd.addActionListener(new ActionListener() {
             @Override
@@ -110,8 +117,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
     private void login(String username, String password) {
         try {
 
-            String urlString = "https://namibia-mpi.globalhealthapp.net/auth";
-
+            String urlString = configReader.getUrl();
             // Create a URL object
             URL url = new URL(urlString);
 

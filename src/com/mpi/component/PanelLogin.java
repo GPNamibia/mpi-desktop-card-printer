@@ -67,7 +67,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
 
     private void initLogin() {
         loginButton.setLayout(new MigLayout("wrap", "push[center]push", "push[]25[]10[]10[]25[]push"));
-        JLabel label = new JLabel("MPI Login");
+        JLabel label = new JLabel("Namibia MPI Login");
         label.setFont(new Font("sansserif", 1, 30));
         label.setForeground(new Color(0,74,151,255));
         loginButton.add(label);
@@ -147,7 +147,7 @@ public class PanelLogin extends javax.swing.JLayeredPane {
             } else {
                 // Handle unsuccessful response
                 successResponseUnsuccessful();
-//                System.out.println("Error retrieving data. Response code: " + responseCode);
+                // System.out.println("Error retrieving data. Response code: " + responseCode);
             }
 
             // Close connection
@@ -170,8 +170,8 @@ public class PanelLogin extends javax.swing.JLayeredPane {
             preference = Preferences.userNodeForPackage(getClass());
             preference.put("access_token", access_token); 
             
-             mainFrame.showLoading(false);
-            JOptionPane.showMessageDialog(null, "Successfully logged in", "Success", JOptionPane.INFORMATION_MESSAGE);
+             Main.showLoading(false);
+            //JOptionPane.showMessageDialog(null, "Successfully logged in", "Success", JOptionPane.INFORMATION_MESSAGE);
 
             ((Main) SwingUtilities.getWindowAncestor(this)).showLoggedInPanels(true);
 

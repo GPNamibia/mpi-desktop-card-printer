@@ -11,6 +11,7 @@ import com.evolis.sdk.PrintSession;
 import com.evolis.sdk.PrinterInfo;
 import com.evolis.sdk.ReturnCode;
 import com.evolis.sdk.RwCardType;
+import com.evolis.sdk.*;
 import com.evolis.sdk.examples.PrinterName;
 import com.google.zxing.WriterException;
 import static com.mpi.component.PanelCard.getPatientData;
@@ -78,7 +79,7 @@ public class PanelSearch extends javax.swing.JPanel {
         searchField = new MyTextField();
         searchField.setFont(new Font("Arial", Font.BOLD, 14));
         searchField.setForeground(Color.BLACK);
-        searchField.setHint("Enter HealthID");
+        searchField.setHint("Enter Health ID");
         add(searchField, "w 60%, h 40");
 
         // Search Button
@@ -218,7 +219,6 @@ public class PanelSearch extends javax.swing.JPanel {
         
         String printerName = PrinterName.get(new String[]{});
         Connection connection = new Connection(printerName);
- 
 
         if (preferences == null) {
             JOptionPane.showMessageDialog(this, "Error: Image file path is null", "Error", JOptionPane.ERROR_MESSAGE);
@@ -230,6 +230,8 @@ public class PanelSearch extends javax.swing.JPanel {
 
         if (connection.isOpen()) {
             PrinterInfo printerInfo = connection.getInfo();
+            State state = connection.getState();
+
             if (printerInfo != null) {
                 printerName = printerInfo.getName();
             }
@@ -237,6 +239,17 @@ public class PanelSearch extends javax.swing.JPanel {
             if (printerName != null) {
                 JOptionPane.showMessageDialog(this, "Successfully connected to " + printerName,
                         "Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                // Display printer state to use if the printer is not ready
+                if (state != null) {
+                    if (state.getMajorState() == State.MajorState.READY) {
+                        System.out.println("Printer is READY.");
+                    } else {
+                        System.out.println("Printer state is " + state.getMajorState() + ":" + state.getMinorState());
+                        JOptionPane.showMessageDialog(this, "Printer state is " + state.getMajorState() + ":" + state.getMinorState(),
+                                "Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to retrieve printer information.",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +258,7 @@ public class PanelSearch extends javax.swing.JPanel {
             // Wait until the image is saved
             SwingUtilities.invokeLater(() -> {
                 // Convert the selected image to a BMP file
-    //            System.out.println("> Path.."+savedImagePath);
+                // System.out.println("> Path.."+savedImagePath);
                 File bmpFile = new File(imagePath);
                 if (!bmpFile.exists()) {
                     JOptionPane.showMessageDialog(this, "Error: Image file not found", "Error", JOptionPane.ERROR_MESSAGE);
@@ -254,6 +267,7 @@ public class PanelSearch extends javax.swing.JPanel {
 
                 PrintSession ps = new PrintSession(connection, RwCardType.MBLACK);
 
+                // do printing
                 if (!ps.setImage(CardFace.FRONT, imagePath)) {
                     JOptionPane.showMessageDialog(this, "Error: Can't load the image file", "Error", JOptionPane.ERROR_MESSAGE);
                     System.out.println("> Print result: " + bmpFile);
@@ -261,13 +275,14 @@ public class PanelSearch extends javax.swing.JPanel {
                 }
 
                 System.out.println("> Start printing...");
-                JOptionPane.showMessageDialog(null, "> Start printing...");
+                //JOptionPane.showMessageDialog(null, "> Start printing...");
+
+                // print result output
                 ReturnCode r = ps.print();
                 System.out.println("> Print result: " + r);
+                JOptionPane.showMessageDialog(this, ""+r, "Print Result", JOptionPane.INFORMATION_MESSAGE);
 
                 connection.close();
-
-                JOptionPane.showMessageDialog(this, "Image printed successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             });
         } else {
             JOptionPane.showMessageDialog(this, "Printer connection failed", "Error", JOptionPane.ERROR_MESSAGE);

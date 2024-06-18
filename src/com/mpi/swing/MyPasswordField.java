@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JPasswordField;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
+import java.awt.Toolkit;
+import java.io.IOException;
 
 public class MyPasswordField extends JPasswordField {
 
@@ -44,11 +47,37 @@ public class MyPasswordField extends JPasswordField {
     private String hint = "";
 
     public MyPasswordField() {
+        super();
+        // Add key listener for select all, copy, and paste
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if ((e.getKeyCode() == KeyEvent.VK_A) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
+                    selectAll();
+                }
+                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    Transferable contents = clipboard.getContents(null);
+                    try {
+                        String pastedText = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                        replaceSelection(pastedText);
+                    } catch (UnsupportedFlavorException | IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(0, 0, 0, 0));
         setForeground(Color.decode("#7A8C8D"));
         setFont(new java.awt.Font("sansserif", 0, 13));
         setSelectionColor(new Color(75, 175, 152));
+        ActionMap am = getActionMap();
+        InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.copyAction);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.pasteAction);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.selectAllAction);
+
     }
 
     @Override

@@ -7,9 +7,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
+import java.awt.Toolkit;
+import java.io.IOException;
+
 
 public class MyTextField extends JTextField {
 
@@ -44,14 +48,45 @@ public class MyTextField extends JTextField {
     private String hint = "";
 
     public MyTextField() {
+        super();
+        // Add key listener for select all, copy, and paste
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if ((e.getKeyCode() == KeyEvent.VK_A) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
+                    selectAll();
+                }
+                if ((e.getKeyCode() == KeyEvent.VK_C) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    String selectedText = getSelectedText();
+                    StringSelection stringSelection = new StringSelection(selectedText);
+                    clipboard.setContents(stringSelection, null);
+                }
+                if ((e.getKeyCode() == KeyEvent.VK_V) && ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != 0)) {
+                    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    Transferable contents = clipboard.getContents(null);
+                    try {
+                        String pastedText = (String) contents.getTransferData(DataFlavor.stringFlavor);
+                        replaceSelection(pastedText);
+                    } catch (UnsupportedFlavorException | IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(new Color(0, 0, 0, 0));
         setForeground(Color.decode("#7A8C8D"));
         setFont(new java.awt.Font("sansserif", 0, 13));
         setSelectionColor(new Color(75, 175, 152));
+        ActionMap am = getActionMap();
+        InputMap im = getInputMap(JComponent.WHEN_FOCUSED);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.copyAction);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.pasteAction);
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), DefaultEditorKit.selectAllAction);
+
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -61,7 +96,7 @@ public class MyTextField extends JTextField {
         super.paintComponent(g);
     }
 
-    @Override
+
     public void paint(Graphics g) {
         super.paint(g);
         if (getText().length() == 0) {

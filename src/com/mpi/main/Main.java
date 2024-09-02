@@ -7,13 +7,12 @@ import com.mpi.component.PanelCard;
 import com.mpi.component.PanelLoading;
 import com.mpi.component.PanelLogin;
 import com.mpi.component.PanelSearch;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -45,8 +44,8 @@ public class Main extends javax.swing.JFrame {
     private final double addSize = 30;
     private final double coverSize = 100;
     private final double loginSize = 50;
-    private static final int CARD_WIDTH = 400; 
-    private static final int CARD_HEIGHT = 300;
+    private static final int CARD_WIDTH = 800;
+    private static final int CARD_HEIGHT = 600;
     private String savedImagePath;
     public static Preferences preferences; 
     
@@ -55,6 +54,13 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(false);
+
+        // Set the default window size
+        setSize(1200, 700); // Adjust the size as needed
+        // Prevent window resizing
+        setResizable(true);
+        // Assuming you want to lock the size to 900x800 pixels
+        Dimension lockedSize = new Dimension(1200, 700);
 
         bg = new JLayeredPane();
         bg.setBackground(new Color(204, 204, 204));
@@ -69,6 +75,9 @@ public class Main extends javax.swing.JFrame {
             bgLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGap(0, 537, Short.MAX_VALUE)
         );
+        bg.setMinimumSize(lockedSize);
+        bg.setMaximumSize(lockedSize);
+        bg.setPreferredSize(lockedSize);
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,36 +103,23 @@ public class Main extends javax.swing.JFrame {
         panelSearch = new PanelSearch(this);
         login = new PanelLogin(this);
         panelLoading=new PanelLoading();
-
         bg.setLayout(new MigLayout("fill, insets 0, flowy"));
 
         // Add PanelCard and PanelSearch to the bg panel
-        
         bg.setLayer(panelLoading, JLayeredPane.POPUP_LAYER);
-        
         bg.add(panelLoading, "pos 0 0 100% 100%");
-       
-        bg.add(panelCard, "width " + loginSize + "%, gapleft push, gapright 0, align right");
-
-
-        bg.add(panelSearch, "width " + loginSize + "%, pos " + (isLogin ? "0al" : "1al") + " 0 n 100%");
-
-        // Add the login panel
+        bg.add(panelCard, "width " + 78 + "%, gapleft push, gapright 0, align right");
+        bg.add(panelSearch, "width " + 23 + "%, pos " + (isLogin ? "0al" : "1al") + " 0 n 100%");
         bg.add(login, "width " + coverSize + "%, pos " + (isLogin ? "0al" : "1al") + " 0 n 100%");
-
 
         // Hide the other panels initially
         panelCard.setVisible(false);
         panelSearch.setVisible(false);
         panelLoading.setVisible(false);
-        
-//        checkIfTokenExist();
-
-        // Initialize other components as needed
     }
 
 
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -164,25 +160,20 @@ public class Main extends javax.swing.JFrame {
 public void savePanelAsImage() {
     SwingUtilities.invokeLater(() -> {
         // Define the resolution (dots per inch) for printing
-        int resolution = 300; // 300 DPI is a common print resolution
-
-        // Calculate the image size based on the resolution and panel size
-        double scale = resolution / 72.0; // Convert DPI to dots per point
-        int imageWidth = (int) (panelCard.getWidth() * scale);
-        int imageHeight = (int) (panelCard.getHeight() * scale);
+        int resolution = 1200; // 300 DPI is a common print resolution
+        int imageWidth = (int) (panelCard.getWidth());
+        int imageHeight = (int) (panelCard.getHeight());
 
         // Create a BufferedImage with the desired resolution
         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
-
         // Create a Graphics2D object from the BufferedImage
         Graphics2D g2d = image.createGraphics();
-
         // Set rendering hints for better quality
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
         // Scale the graphics context to match the higher resolution
-        g2d.scale(scale, scale);
+        //g2d.scale(resolution, resolution);
 
         // Render the panel onto the BufferedImage
         panelCard.paint(g2d);

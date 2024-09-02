@@ -62,32 +62,33 @@ public class PanelSearch extends javax.swing.JPanel {
     public PanelSearch(Main mainFrame) {
         this.mainFrame = mainFrame; 
         initComponents();
-        layout = new MigLayout("wrap, fill", "[center]", "push[]20[]20[]20[]push");
-        setLayout(layout);
+        layout = new MigLayout("fill, insets 0", // fill the entire panel and set insets to 0
+                "[grow]", // make columns grow equally
+                "[]20[]20[]20[]");         setLayout(layout);
         setOpaque(false);
         init();
     }
     
     private void init() {
         // Title
-        title = new JLabel("Search & Print Health Card");
-        title.setFont(new Font("sansserif", Font.BOLD, 26));
+        title = new JLabel("Search & Print");
+        title.setFont(new Font("sansserif", Font.BOLD, 18));
         title.setForeground(new Color(0,74,151,255));
-        add(title);
+        add(title, "wrap, align center");
 
         // Search field
         searchField = new MyTextField();
         searchField.setFont(new Font("Arial", Font.BOLD, 14));
         searchField.setForeground(Color.BLACK);
         searchField.setHint("Enter Health ID");
-        add(searchField, "w 60%, h 40");
+        add(searchField, "growx, wrap, w 60%!, h 40!, align center");
 
         // Search Button
         button = new Button();
         button.setBackground(new Color(0,74,151,255));
         button.setForeground(new Color(245, 245, 245));
         button.setText("Search");
-        add(button, "w 60%, h 40");
+        add(button, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the search button
         button.addActionListener(new ActionListener() {
@@ -104,10 +105,8 @@ public class PanelSearch extends javax.swing.JPanel {
 
                 SwingUtilities.invokeLater(() -> {
                     // Perform actions after the search is done
-
                     // Make the print button visible
                     buttonPrint.setVisible(true);
-
                     // Save panel as image
                     mainFrame.savePanelAsImage();
                 });
@@ -127,7 +126,7 @@ public class PanelSearch extends javax.swing.JPanel {
         buttonPrint.setForeground(new Color(245, 245, 245));
         buttonPrint.setText("Print");
         buttonPrint.setVisible(preferences != null);
-        add(buttonPrint, "w 60%, h 40");
+        add(buttonPrint, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the print button
         buttonPrint.addActionListener(new ActionListener() {
@@ -144,7 +143,7 @@ public class PanelSearch extends javax.swing.JPanel {
         buttonLogout.setBackground(Color.red);
         buttonLogout.setForeground(new Color(245, 245, 245));
         buttonLogout.setText("Logout");
-        add(buttonLogout, "w 40%, h 20");
+        add(buttonLogout, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the logout button
         buttonLogout.addActionListener(new ActionListener() {
@@ -155,9 +154,6 @@ public class PanelSearch extends javax.swing.JPanel {
             }
         });
     }
-
-
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

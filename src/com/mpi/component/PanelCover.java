@@ -88,7 +88,6 @@ public class PanelCover extends javax.swing.JPanel {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("COLLLIN1");
 //                mainFrame.displayPrinterInfo();
             }
         });

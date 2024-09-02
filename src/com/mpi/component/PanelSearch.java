@@ -11,6 +11,7 @@ import com.evolis.sdk.PrintSession;
 import com.evolis.sdk.PrinterInfo;
 import com.evolis.sdk.ReturnCode;
 import com.evolis.sdk.RwCardType;
+import com.evolis.sdk.*;
 import com.evolis.sdk.examples.PrinterName;
 import com.google.zxing.WriterException;
 import static com.mpi.component.PanelCard.getPatientData;
@@ -61,32 +62,33 @@ public class PanelSearch extends javax.swing.JPanel {
     public PanelSearch(Main mainFrame) {
         this.mainFrame = mainFrame; 
         initComponents();
-        layout = new MigLayout("wrap, fill", "[center]", "push[]20[]20[]20[]push");
-        setLayout(layout);
+        layout = new MigLayout("fill, insets 0", // fill the entire panel and set insets to 0
+                "[grow]", // make columns grow equally
+                "[]20[]20[]20[]");         setLayout(layout);
         setOpaque(false);
         init();
     }
     
     private void init() {
         // Title
-        title = new JLabel("Retrieve & Print");
-        title.setFont(new Font("sansserif", Font.BOLD, 30));
+        title = new JLabel("Search & Print");
+        title.setFont(new Font("sansserif", Font.BOLD, 18));
         title.setForeground(new Color(0,74,151,255));
-        add(title);
+        add(title, "wrap, align center");
 
         // Search field
         searchField = new MyTextField();
         searchField.setFont(new Font("Arial", Font.BOLD, 14));
         searchField.setForeground(Color.BLACK);
-        searchField.setHint("Enter HealthID");
-        add(searchField, "w 60%, h 40");
+        searchField.setHint("Enter Health ID");
+        add(searchField, "growx, wrap, w 60%!, h 40!, align center");
 
         // Search Button
         button = new Button();
         button.setBackground(new Color(0,74,151,255));
         button.setForeground(new Color(245, 245, 245));
         button.setText("Search");
-        add(button, "w 60%, h 40");
+        add(button, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the search button
         button.addActionListener(new ActionListener() {
@@ -103,10 +105,8 @@ public class PanelSearch extends javax.swing.JPanel {
 
                 SwingUtilities.invokeLater(() -> {
                     // Perform actions after the search is done
-
                     // Make the print button visible
                     buttonPrint.setVisible(true);
-
                     // Save panel as image
                     mainFrame.savePanelAsImage();
                 });
@@ -126,7 +126,7 @@ public class PanelSearch extends javax.swing.JPanel {
         buttonPrint.setForeground(new Color(245, 245, 245));
         buttonPrint.setText("Print");
         buttonPrint.setVisible(preferences != null);
-        add(buttonPrint, "w 60%, h 40");
+        add(buttonPrint, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the print button
         buttonPrint.addActionListener(new ActionListener() {
@@ -143,20 +143,17 @@ public class PanelSearch extends javax.swing.JPanel {
         buttonLogout.setBackground(Color.red);
         buttonLogout.setForeground(new Color(245, 245, 245));
         buttonLogout.setText("Logout");
-        add(buttonLogout, "w 40%, h 20");
+        add(buttonLogout, "growx, wrap, w 60%!, h 40!, align center");
 
         // Add action listener to the logout button
         buttonLogout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                JOptionPane.showMessageDialog(mainFrame, "Successfully Logged out", "Success", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(mainFrame, "Successfully Logged out", "Success", JOptionPane.INFORMATION_MESSAGE);
                 mainFrame.showLoggedInPanels(false);
             }
         });
     }
-
-
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -218,7 +215,8 @@ public class PanelSearch extends javax.swing.JPanel {
         
         String printerName = PrinterName.get(new String[]{});
         Connection connection = new Connection(printerName);
- 
+        buttonPrint.setEnabled(false);
+        buttonPrint.setBackground(Color.GRAY);
 
         if (preferences == null) {
             JOptionPane.showMessageDialog(this, "Error: Image file path is null", "Error", JOptionPane.ERROR_MESSAGE);
@@ -230,13 +228,25 @@ public class PanelSearch extends javax.swing.JPanel {
 
         if (connection.isOpen()) {
             PrinterInfo printerInfo = connection.getInfo();
+            State state = connection.getState();
+
             if (printerInfo != null) {
                 printerName = printerInfo.getName();
             }
 
             if (printerName != null) {
-                JOptionPane.showMessageDialog(this, "Successfully connected to " + printerName,
-                        "Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                //JOptionPane.showMessageDialog(this, "Successfully connected to " + printerName,"Printer Info", JOptionPane.INFORMATION_MESSAGE);
+                // Display printer state to user if the printer is not ready
+                if (state != null) {
+                    if (state.getMajorState() == State.MajorState.READY) {
+                        System.out.println("Printer is READY.");
+                    } else {
+                        System.out.println("Printer state is " + state.getMajorState() + ":" + state.getMinorState());
+                        JOptionPane.showMessageDialog(this,  state.getMajorState() + ":" + state.getMinorState(),
+                                "Printer Status", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+
             } else {
                 JOptionPane.showMessageDialog(this, "Failed to retrieve printer information.",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -245,7 +255,7 @@ public class PanelSearch extends javax.swing.JPanel {
             // Wait until the image is saved
             SwingUtilities.invokeLater(() -> {
                 // Convert the selected image to a BMP file
-    //            System.out.println("> Path.."+savedImagePath);
+                // System.out.println("> Path.."+savedImagePath);
                 File bmpFile = new File(imagePath);
                 if (!bmpFile.exists()) {
                     JOptionPane.showMessageDialog(this, "Error: Image file not found", "Error", JOptionPane.ERROR_MESSAGE);
@@ -254,6 +264,7 @@ public class PanelSearch extends javax.swing.JPanel {
 
                 PrintSession ps = new PrintSession(connection, RwCardType.MBLACK);
 
+                // do printing
                 if (!ps.setImage(CardFace.FRONT, imagePath)) {
                     JOptionPane.showMessageDialog(this, "Error: Can't load the image file", "Error", JOptionPane.ERROR_MESSAGE);
                     System.out.println("> Print result: " + bmpFile);
@@ -261,17 +272,18 @@ public class PanelSearch extends javax.swing.JPanel {
                 }
 
                 System.out.println("> Start printing...");
-                JOptionPane.showMessageDialog(null, "> Start printing...");
+                // print result output
                 ReturnCode r = ps.print();
                 System.out.println("> Print result: " + r);
+                JOptionPane.showMessageDialog(this, ""+r, "Print Result", JOptionPane.INFORMATION_MESSAGE);
 
                 connection.close();
-
-                JOptionPane.showMessageDialog(this, "Image printed successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             });
         } else {
             JOptionPane.showMessageDialog(this, "Printer connection failed", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        buttonPrint.setEnabled(true);
+        buttonPrint.setBackground(new Color(0,74,151,255));
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
